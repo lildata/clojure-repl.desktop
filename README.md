@@ -2,10 +2,7 @@
 
 Pretty stupid but damn handy...
 
-#![screenshot](screenshot.png)
-
-
-## Requisites
+## Require
 
 * gnome-terminal
 * python-dbus
