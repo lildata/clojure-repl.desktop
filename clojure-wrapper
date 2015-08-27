@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+# most of the code come from the neovim wrapper actually https://github.com/fmoralesc/neovim-gnome-terminal-wrapper
+
+from sys import argv
+from subprocess import Popen
+from time import time
+import dbus
+
+session_bus = dbus.SessionBus()
+
+# launch gnome-terminal-server with an app-id and window class (for the.desktop file)
+# gnome-terminal-server is in /usr/libexec/ in Redhat, /usr/lib/gnome-terminal/ in other distribution
+Popen("/usr/libexec/gnome-terminal-server --app-id org.clojure --class=clojure".split())
+
+# wait until the name is registered
+timeout = time() + 2
+while not session_bus.name_has_owner('org.clojure') and time() <= timeout:
+    pass
+
+# launch clojure repl in a gnome-terminal instance
+if session_bus.name_has_owner('org.clojure'):
+    Popen("gnome-terminal --app-id org.clojure -x clojure".split() + argv[1:])
